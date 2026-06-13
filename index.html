@@ -47,10 +47,16 @@
   .cursor-ring.down{width:24px;height:24px;border-color:var(--gold)}
   .cursor-dot{width:6px;height:6px;background:var(--gold);box-shadow:0 0 10px var(--gold)}
 
-  .wrap{position:relative;z-index:1;width:min(1280px,92vw);margin-inline:auto}
+  ..wrap{
+    width:100%;
+    max-width:980px;
+    margin:0 auto;
+}
 
   /* ---------- Header ---------- */
-  header{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;
+ header{
+    position:relative;
+}top:0;left:0;right:0;z-index:40;display:flex;align-items:center;
     justify-content:space-between;padding:16px clamp(16px,4vw,52px);
     background:linear-gradient(180deg,rgba(8,8,11,.86),rgba(8,8,11,0));backdrop-filter:blur(7px)}
   .brand{display:flex;align-items:center;gap:12px}

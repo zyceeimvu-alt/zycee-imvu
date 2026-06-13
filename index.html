@@ -47,16 +47,10 @@
   .cursor-ring.down{width:24px;height:24px;border-color:var(--gold)}
   .cursor-dot{width:6px;height:6px;background:var(--gold);box-shadow:0 0 10px var(--gold)}
 
-  ..wrap{
-    width:100%;
-    max-width:980px;
-    margin:0 auto;
-}
+  .wrap{position:relative;z-index:1;width:min(1280px,92vw);margin-inline:auto}
 
   /* ---------- Header ---------- */
- header{
-    position:relative;
-}top:0;left:0;right:0;z-index:40;display:flex;align-items:center;
+  header{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;
     justify-content:space-between;padding:16px clamp(16px,4vw,52px);
     background:linear-gradient(180deg,rgba(8,8,11,.86),rgba(8,8,11,0));backdrop-filter:blur(7px)}
   .brand{display:flex;align-items:center;gap:12px}
@@ -366,14 +360,29 @@
   var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
   var finePointer=window.matchMedia&&matchMedia("(pointer:fine)").matches;
 
-  /* =========================================================
-     BEST SELLERS — manual override (optional but recommended)
-     Your EXACT sales are private (Creator Dashboard → Product
-     List report → "Show Sales"). To pin your real top sellers,
-     paste their product IDs below, e.g.:  ["74891450","74891168"]
-     Leave empty [] to auto-pull IMVU's popularity ranking.
-     ========================================================= */
-  var BESTSELLERS_MANUAL=[];
+  /* ══════════════════════════════════════════════════════════════════
+     ★★★  BEST SELLERS — EDITE AQUI  ★★★
+     Esta é a lista dos produtos que aparecem na seção "Best Sellers",
+     na ordem em que estão aqui (01, 02, 03...).
+
+     Para TROCAR um produto:
+       1. Abra o produto na loja IMVU e copie o número do link
+          (.../products_id=NUMERO) → cole em  id
+       2. Coloque o nome em  name  e o preço em  price
+       3. Clique com o botão direito na imagem do produto →
+          "Copiar endereço da imagem" → cole em  img
+     Para ADICIONAR/REMOVER: copie/apague um bloco  { ... }  inteiro.
+     ══════════════════════════════════════════════════════════════════ */
+  var BEST_SELLERS=[
+    {id:"73169050", name:"🅉 - Liana MH",       price:"1,799", img:"https://webasset-akm.imvu.com/resized_image/dproductdata/tmaintain_aspect_ratio/i%2Fproductdata%2Fimages_f329919b2f85b9de34d68e511063f8a4.png?width=400&height=400"},
+    {id:"74586238", name:"🅉 - Celestial Eyes", price:"499",   img:"https://webasset-akm.imvu.com/resized_image/dproductdata/tmaintain_aspect_ratio/i%2Fproductdata%2Fimages_df848af0e8a1c34e5ebb701b9f613abc.png?width=400&height=400"},
+    {id:"72947115", name:"🅉 - Neo Skin",        price:"664",   img:"https://webasset-akm.imvu.com/resized_image/dproductdata/tmaintain_aspect_ratio/i%2Fproductdata%2Fimages_58e0583d2416690b5ce4faf73fcb3a2b.png?width=400&height=400"},
+    {id:"73337936", name:"🅉 - Zahir MH",        price:"2,999", img:"https://webasset-akm.imvu.com/resized_image/dproductdata/tmaintain_aspect_ratio/i%2Fproductdata%2Fimages_ffbca2a0f5df4bf91d39404b609c243e.png?width=400&height=400"},
+    {id:"74667074", name:"🅉 - Bernad MH",       price:"2,999", img:"https://webasset-akm.imvu.com/resized_image/dproductdata/tmaintain_aspect_ratio/i%2Fproductdata%2Fimages_915ef725a8e9d09a7e88de4497935961.png?width=400&height=400"},
+    {id:"72905592", name:"🅉 - Lucas Skin v1",   price:"664",   img:"https://webasset-akm.imvu.com/resized_image/dproductdata/tmaintain_aspect_ratio/i%2Fproductdata%2Fimages_8f5881d71484786a8bcb66c8b0d82dd8.png?width=400&height=400"},
+    {id:"72946819", name:"🅉 - Neo MH Tattoo",   price:"3,999", img:"https://webasset-akm.imvu.com/resized_image/dproductdata/tmaintain_aspect_ratio/i%2Fproductdata%2Fimages_0958b5b0eef04adde5265c9b098f5ed1.png?width=400&height=400"},
+    {id:"70895893", name:"🅉 - FullBodyTattoo",  price:"664",   img:"https://webasset-akm.imvu.com/resized_image/dproductdata/tmaintain_aspect_ratio/i%2Fproductdata%2Fimages_a1df837857b06a1dcf542250275f7934.png?width=400&height=400"}
+  ];
 
   /* Fallback newest (real data) */
   var FALLBACK_NEW=[
@@ -389,17 +398,6 @@
     {id:"74849563",name:"🅉 - Evans Skin",     img:"https://userimages01-akm.imvu.com/productdata/images_77e55fa6dd219f61284030f974d3de06.png",price:"799"},
     {id:"74849438",name:"🅉 - Daves Skin",     img:"https://userimages01-akm.imvu.com/productdata/images_2a95f840113abfb378db679469bce398.png",price:"799"},
     {id:"74891450",name:"🅉 - Nanda MH",       img:"https://userimages01-akm.imvu.com/productdata/images_ffac2ba5952ff317cce66b8f14f743f6.png",price:"1,999"}
-  ];
-  /* Fallback best-sellers (curated, editable) */
-  var FALLBACK_BEST=[
-    {id:"74891450",name:"🅉 - Nanda MH",      img:"https://userimages01-akm.imvu.com/productdata/images_ffac2ba5952ff317cce66b8f14f743f6.png",price:"1,999"},
-    {id:"74891168",name:"🅉 - Britney MH",    img:"https://userimages01-akm.imvu.com/productdata/images_bb8c6bba75b3ee59a9c2dce0031cbbd6.png",price:"1,999"},
-    {id:"74968558",name:"🅉 - Egypt Nail",    img:"https://userimages01-akm.imvu.com/productdata/images_6e1f7b654058abecb0bd18928cc4619e.png",price:"899"},
-    {id:"74849679",name:"🅉 - Aster MH",      img:"https://userimages05-akm.imvu.com/productdata/images_6e045b3c4d7bbeb4858c8aa0e9daf3da.png",price:"2,999"},
-    {id:"74890191",name:"🅉 - Franciele Skin",img:"https://userimages03-akm.imvu.com/productdata/images_5aada87874b66a68c56f44d77097d4fc.png",price:"799"},
-    {id:"74889983",name:"🅉 - Harley MH",     img:"https://userimages01-akm.imvu.com/productdata/images_2c9b59be83ef06f4fd8f6ccbc55d1b9d.png",price:"1,999"},
-    {id:"74963366",name:"🅉 - Exclusive French",img:"https://userimages02-akm.imvu.com/productdata/images_0b82bd5fd4d66a659bad388059c041cc.png",price:"899"},
-    {id:"74850420",name:"🅉 - Regis MH",      img:"https://userimages01-akm.imvu.com/productdata/images_5964e1ed2d787b76df30078805aaff25.png",price:"2,999"}
   ];
   function prodUrl(id){return "https://pt.imvu.com/shop/product.php?products_id="+id;}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
@@ -486,19 +484,8 @@
   proxied(SHOP_NEW).then(function(list){newestData=list;renderInto("grid",list,"new");renderOrbit(list);if(list.total)setCount(list.total);})
   .catch(function(){newestData=FALLBACK_NEW;renderInto("grid",FALLBACK_NEW,"new");renderOrbit(FALLBACK_NEW);});
 
-  /* ---------- load BEST SELLERS ---------- */
-  if(BESTSELLERS_MANUAL&&BESTSELLERS_MANUAL.length){
-    // resolve manual IDs against whatever we know (fallback pool); unknown IDs still link out
-    var pool={};FALLBACK_NEW.concat(FALLBACK_BEST).forEach(function(p){pool[p.id]=p;});
-    var manual=BESTSELLERS_MANUAL.map(function(id){return pool[id]||{id:id,name:"🅉 - ZYCEE",img:"https://www.imvu.com/catalog/image_avatar.php?cid="+MANUF,price:""};});
-    renderInto("bestGrid",manual,"best");
-  }else{
-    proxied(SHOP_BEST).then(function(list){
-      // if the popularity sort got ignored (identical to newest), use curated best list instead
-      if(newestData&&sameHead(list,newestData)) renderInto("bestGrid",FALLBACK_BEST,"best");
-      else renderInto("bestGrid",list,"best");
-    }).catch(function(){renderInto("bestGrid",FALLBACK_BEST,"best");});
-  }
+  /* ---------- show BEST SELLERS (your curated list above) ---------- */
+  renderInto("bestGrid",BEST_SELLERS,"best");
 
   /* ---------- rig tilt ---------- */
   var rig=document.getElementById("rig"),stage=document.getElementById("stage"),tx=0,ty=0,cx=0,cy=0;

@@ -80,8 +80,15 @@
   .btn:focus-visible,a:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
 
   /* ---------- Hero ---------- */
-  .hero{min-height:100svh;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;
-    gap:clamp(24px,4vw,56px);padding:118px 0 64px}
+  .hero{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;gap:0;padding:118px 0 64px;position:relative}
+  .hero .eyebrow{justify-content:center}
+  .hero .hero-cta{justify-content:center}
+  .scroll-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+    font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--steel);
+    transition:color .25s;animation:bob 2.4s ease-in-out infinite}
+  .scroll-cue:hover{color:var(--ice)}
+  @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
   .eyebrow{font-size:.66rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);
     display:flex;align-items:center;gap:13px;margin-bottom:22px}
   .eyebrow::before{content:"";width:42px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
@@ -119,40 +126,49 @@
   .tagline{font-family:var(--sans);font-weight:600;letter-spacing:.22em;text-transform:uppercase;
     font-size:clamp(.78rem,1.5vw,1rem);color:var(--chrome);margin:18px 0 14px}
   .tagline i{color:var(--gold);font-style:normal}
-  .sub{color:var(--steel);max-width:42ch;font-size:.96rem;margin-bottom:32px;font-weight:300}
+  .sub{color:var(--steel);max-width:46ch;font-size:.96rem;margin:0 auto 32px;font-weight:300}
   .hero-cta{display:flex;gap:13px;flex-wrap:wrap}
 
-  /* ---------- Centerpiece ---------- */
-  .stage{perspective:1300px;display:grid;place-items:center;height:clamp(420px,64vh,640px);position:relative}
-  .rig{position:relative;width:min(440px,86%);aspect-ratio:1/1;transform-style:preserve-3d;
-    will-change:transform;transition:transform .12s ease-out;display:grid;place-items:center}
-  .frame{position:relative;width:44%;aspect-ratio:3/4;border-radius:13px;overflow:hidden;
-    transform:translateZ(40px);background:linear-gradient(180deg,#1b1c22,#0c0c10);
-    border:1px solid rgba(205,211,220,.28);
-    box-shadow:0 28px 70px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.16),
-      0 0 0 1px rgba(121,216,255,.06),0 0 46px rgba(121,216,255,.10);
-    animation:float 7s ease-in-out infinite}
-  @keyframes float{0%,100%{transform:translateZ(40px) translateY(-6px)}50%{transform:translateZ(40px) translateY(7px)}}
-  .frame img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
-  .frame::after{content:"";position:absolute;inset:0;
-    background:linear-gradient(118deg,transparent 38%,rgba(255,255,255,.12) 50%,transparent 60%)}
-  .corner{position:absolute;width:15px;height:15px;border:2px solid var(--gold);z-index:3;transform:translateZ(42px)}
-  .corner.tl{top:7px;left:7px;border-right:0;border-bottom:0}
-  .corner.tr{top:7px;right:7px;border-left:0;border-bottom:0}
-  .corner.bl{bottom:7px;left:7px;border-right:0;border-top:0}
-  .corner.br{bottom:7px;right:7px;border-left:0;border-top:0}
-  .ghostmark{position:absolute;font-family:var(--display);font-size:clamp(10rem,24vw,18rem);
-    color:rgba(205,211,220,.045);z-index:-1;transform:translateZ(-60px);line-height:1;user-select:none}
+  /* ---------- 3D Cover Flow showcase ---------- */
+  .cf-wrap{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:14px;height:clamp(420px,56vh,560px)}
+  .cf-stage{position:relative;width:100%;flex:1;min-height:0;perspective:1500px;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent);
+            mask-image:linear-gradient(90deg,transparent,#000 11%,#000 89%,transparent)}
+  .cf-track{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+  .cf-card{position:absolute;left:50%;top:50%;width:clamp(150px,16vw,225px);aspect-ratio:1;
+    border-radius:14px;cursor:pointer;will-change:transform;user-select:none;-webkit-user-select:none;
+    -webkit-box-reflect:below 6px linear-gradient(transparent 55%, rgba(255,255,255,.20))}
+  .cf-card img{-webkit-user-drag:none;user-drag:none}
+  .cf-card .cf-img{position:absolute;inset:0;border-radius:14px;overflow:hidden;background:#101015;
+    border:1px solid rgba(205,211,220,.22);
+    box-shadow:0 26px 60px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.12)}
+  .cf-card .cf-img img{width:100%;height:100%;object-fit:cover;display:block}
+  .cf-card .cf-img::after{content:"";position:absolute;inset:0;border-radius:14px;
+    background:linear-gradient(158deg,rgba(255,255,255,.16),transparent 40%),
+      linear-gradient(0deg,rgba(8,8,13,.5),transparent 48%)}
+  .cf-card.is-active .cf-img{border-color:var(--gold);
+    box-shadow:0 30px 70px rgba(0,0,0,.7),0 0 0 1px var(--gold),0 0 60px rgba(227,192,116,.35),0 0 90px rgba(121,216,255,.18)}
+  .cf-rank{position:absolute;top:8px;left:8px;font-family:var(--display);font-size:.9rem;z-index:3;
+    color:transparent;-webkit-text-stroke:1px rgba(227,192,116,.9);text-shadow:0 2px 6px rgba(0,0,0,.6)}
+  .cf-floor{position:absolute;left:50%;bottom:4%;width:62%;height:28px;transform:translateX(-50%);
+    background:radial-gradient(closest-side,rgba(121,216,255,.22),transparent 75%);filter:blur(3px);pointer-events:none}
 
-  .orbit{position:absolute;left:50%;top:50%;width:1px;height:1px;transform-style:preserve-3d;z-index:5}
-  .orb{position:absolute;left:0;top:0;width:56px;height:56px;margin:-28px 0 0 -28px;cursor:pointer;
-    border-radius:11px;overflow:hidden;border:1px solid rgba(205,211,220,.3);background:#15151b;
-    box-shadow:0 12px 26px rgba(0,0,0,.6);transition:box-shadow .25s}
-  .orb img{width:100%;height:100%;object-fit:cover;display:block}
-  .orb:hover{box-shadow:0 0 0 2px var(--ice),0 14px 30px rgba(121,216,255,.35)}
-  .orbit-hint{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);
-    font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--steel-dim);
-    white-space:nowrap;pointer-events:none}
+  .cf-info{text-align:center;min-height:78px}
+  .cf-name{font-family:var(--display);font-size:clamp(1.4rem,3vw,2.1rem);letter-spacing:.02em;
+    color:var(--chrome-hi);line-height:1;transition:opacity .28s,transform .28s}
+  .cf-meta{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:11px;flex-wrap:wrap;
+    transition:opacity .28s}
+  .cf-price{font-size:1rem;color:var(--gold);font-weight:600;letter-spacing:.03em}
+  .cf-price small{color:var(--steel-dim);font-weight:500}
+  .cf-buy{font-family:var(--sans);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:.66rem;
+    color:#11100c;background:linear-gradient(160deg,#f4dFA0,#e3c074 45%,#bd9647);
+    padding:11px 20px;border-radius:8px;box-shadow:0 8px 24px rgba(227,192,116,.25);
+    transition:transform .2s,box-shadow .2s}
+  .cf-buy:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(227,192,116,.45)}
+  .cf-info.flip .cf-name{opacity:0;transform:translateY(8px)}
+  .cf-info.flip .cf-meta{opacity:0}
+  .cf-hint{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:var(--steel-dim);pointer-events:none}
 
   /* ---------- Product sections ---------- */
   section.shelf{padding:clamp(56px,8vw,104px) 0 40px}
@@ -237,16 +253,12 @@
 
   /* ---------- Responsive ---------- */
   @media (max-width:880px){
-    .hero{grid-template-columns:1fr;padding:104px 0 48px}
-    .stage{order:-1;height:clamp(360px,54vh,500px)}
+    .hero{padding:104px 0 44px}
     .nav-right .count,.nav-right .status{display:none}
     .sub{max-width:100%}
   }
-  @media (max-width:1024px){ .grid{grid-template-columns:repeat(4,1fr)} }
-  @media (max-width:760px){ .grid{grid-template-columns:repeat(3,1fr)} }
-  @media (max-width:480px){
-    .grid{grid-template-columns:repeat(2,1fr);gap:11px}
-    .orb{width:48px;height:48px;margin:-24px 0 0 -24px}
+  @media (max-width:560px){
+    .cf-wrap{height:clamp(360px,50vh,460px)}
   }
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
@@ -285,20 +297,7 @@
           <a class="btn btn-gold" href="https://pt.imvu.com/shop/web_search.php?manufacturers_id=355178529" target="_blank" rel="noopener">Shop the catalog →</a>
         </div>
       </div>
-
-      <div class="stage" id="stage">
-        <div class="rig" id="rig">
-          <span class="ghostmark">Z</span>
-          <div class="frame">
-            <span class="corner tl"></span><span class="corner tr"></span>
-            <span class="corner bl"></span><span class="corner br"></span>
-            <img src="https://www.imvu.com/catalog/image_avatar.php?cid=355178529" alt="ZYCEE avatar"
-                 loading="eager" onerror="this.style.display='none'">
-          </div>
-          <div class="orbit" id="orbit"></div>
-        </div>
-        <div class="orbit-hint">Drag to spin · Tap to view</div>
-      </div>
+      <a class="scroll-cue" href="#best">Best sellers ↓</a>
     </div>
 
     <!-- BEST SELLERS -->
@@ -307,7 +306,20 @@
         <h2>Best <span>Sellers</span></h2>
         <div class="sec-note"><span class="live-dot"></span> The pieces everyone keeps coming back for</div>
       </div>
-      <div class="grid" id="bestGrid"></div>
+      <div class="cf-wrap">
+        <div class="cf-stage" id="bestStage">
+          <div class="cf-track" id="bestTrack"></div>
+          <div class="cf-floor"></div>
+        </div>
+        <div class="cf-info" id="bestInfo">
+          <div class="cf-name" id="bestName">—</div>
+          <div class="cf-meta">
+            <span class="cf-price" id="bestPrice"></span>
+            <a class="cf-buy" id="bestBuy" href="https://pt.imvu.com/shop/web_search.php?manufacturers_id=355178529" target="_blank" rel="noopener">View product →</a>
+          </div>
+        </div>
+        <div class="cf-hint">Drag · scroll · or tap a cover</div>
+      </div>
     </section>
 
     <!-- NEW DROPS -->
@@ -316,7 +328,20 @@
         <h2>New <span>Drops</span></h2>
         <div class="sec-note"><span class="live-dot"></span> Auto-updates with the freshest products from the shop</div>
       </div>
-      <div class="grid" id="grid"></div>
+      <div class="cf-wrap">
+        <div class="cf-stage" id="newStage">
+          <div class="cf-track" id="newTrack"></div>
+          <div class="cf-floor"></div>
+        </div>
+        <div class="cf-info" id="newInfo">
+          <div class="cf-name" id="newName">—</div>
+          <div class="cf-meta">
+            <span class="cf-price" id="newPrice"></span>
+            <a class="cf-buy" id="newBuy" href="https://pt.imvu.com/shop/web_search.php?manufacturers_id=355178529" target="_blank" rel="noopener">View product →</a>
+          </div>
+        </div>
+        <div class="cf-hint">Drag · scroll · or tap a cover</div>
+      </div>
       <div class="sec-foot">
         <a class="btn btn-gold" href="https://pt.imvu.com/shop/web_search.php?manufacturers_id=355178529" target="_blank" rel="noopener">
           View all <span id="totalCount2">1,663</span> products →
@@ -466,43 +491,106 @@
     });
     bindTilt();
   }
-  function renderOrbit(list){
-    var orbit=document.getElementById("orbit");orbit.innerHTML="";
-    var items=list.slice(0,8),R=innerWidth<600?150:205,step=360/items.length;
-    items.forEach(function(p,i){var ang=step*i;var el=document.createElement("a");el.className="orb";
-      el.href=prodUrl(p.id);el.target="_blank";el.rel="noopener";el.dataset.ang=ang;
-      el.style.transform="rotate("+ang+"deg) translateX("+R+"px) rotate("+(-ang)+"deg)";
-      el.innerHTML='<img src="'+p.img+'" alt="'+esc(p.name)+'" onerror="this.parentNode.style.display=\'none\'">';
-      orbit.appendChild(el);});
-    spinOrbit(orbit,R);
-  }
   function skel(id){var g=document.getElementById(id);for(var i=0;i<12;i++){var d=document.createElement("div");d.className="card skeleton";d.innerHTML='<div class="shot"></div><div class="meta"><div class="name"></div><div class="price"></div></div>';g.appendChild(d);}}
-  skel("bestGrid");skel("grid");
+  /* ---------- BEST SELLERS carousel (your curated list above) ---------- */
+  makeCoverFlow({prefix:"best", items:BEST_SELLERS, rank:true});
 
-  /* ---------- load NEW DROPS ---------- */
-  var newestData=null;
-  proxied(SHOP_NEW).then(function(list){newestData=list;renderInto("grid",list,"new");renderOrbit(list);if(list.total)setCount(list.total);})
-  .catch(function(){newestData=FALLBACK_NEW;renderInto("grid",FALLBACK_NEW,"new");renderOrbit(FALLBACK_NEW);});
+  /* ---------- NEW DROPS carousel (auto-updates from the shop) ---------- */
+  proxied(SHOP_NEW).then(function(list){ if(list.total)setCount(list.total); makeCoverFlow({prefix:"new", items:list, rank:false}); })
+  .catch(function(){ makeCoverFlow({prefix:"new", items:FALLBACK_NEW, rank:false}); });
 
-  /* ---------- show BEST SELLERS (your curated list above) ---------- */
-  renderInto("bestGrid",BEST_SELLERS,"best");
+  /* ---------- 3D Cover Flow engine (reusable) ---------- */
+  function makeCoverFlow(cfg){
+    var track=document.getElementById(cfg.prefix+"Track"),stageEl=document.getElementById(cfg.prefix+"Stage");
+    if(!track||!stageEl||!cfg.items||!cfg.items.length) return;
+    var items=cfg.items,n=items.length,cards=[];
+    var nameEl=document.getElementById(cfg.prefix+"Name"),priceEl=document.getElementById(cfg.prefix+"Price"),
+        buyEl=document.getElementById(cfg.prefix+"Buy"),infoEl=document.getElementById(cfg.prefix+"Info");
+    track.innerHTML="";
+    items.forEach(function(p,i){
+      var c=document.createElement("a");
+      c.className="cf-card"; c.href=prodUrl(p.id); c.target="_blank"; c.rel="noopener";
+      c.setAttribute("draggable","false"); c.dataset.i=i;
+      c.innerHTML=(cfg.rank?'<span class="cf-rank">'+(i<9?'0':'')+(i+1)+'</span>':'')+
+        '<div class="cf-img"><img draggable="false" src="'+p.img+'" alt="'+esc(p.name)+'" '+
+        'onerror="this.parentNode.parentNode.style.opacity=.25"></div>';
+      track.appendChild(c); cards.push(c);
+    });
 
-  /* ---------- rig tilt ---------- */
-  var rig=document.getElementById("rig"),stage=document.getElementById("stage"),tx=0,ty=0,cx=0,cy=0;
-  if(rig&&stage&&!reduce){
-    stage.addEventListener("pointermove",function(e){var r=stage.getBoundingClientRect();tx=((e.clientX-r.left)/r.width-.5);ty=((e.clientY-r.top)/r.height-.5);});
-    stage.addEventListener("pointerleave",function(){tx=0;ty=0;});
-    (function loop(){cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;rig.style.transform="rotateY("+(cx*20)+"deg) rotateX("+(-cy*15)+"deg)";requestAnimationFrame(loop);})();
-  }
-  function spinOrbit(orbit,R){
-    var angle=0,vel=reduce?0:0.16,dragging=false,lastX=0,moved=0;
-    function apply(){var o=orbit.children;for(var i=0;i<o.length;i++){var b=parseFloat(o[i].dataset.ang)||0;o[i].style.transform="rotate("+b+"deg) translateX("+R+"px) rotate("+(-b-angle)+"deg)";}}
-    function frame(){if(!dragging)angle+=vel;apply();requestAnimationFrame(frame);}
-    apply();if(!reduce)requestAnimationFrame(frame);
-    orbit.addEventListener("pointerdown",function(e){dragging=true;lastX=e.clientX;moved=0;if(orbit.setPointerCapture)orbit.setPointerCapture(e.pointerId);});
-    window.addEventListener("pointermove",function(e){if(!dragging)return;var dx=e.clientX-lastX;lastX=e.clientX;moved+=Math.abs(dx);angle+=dx*0.4;apply();});
-    window.addEventListener("pointerup",function(){dragging=false;});
-    orbit.addEventListener("click",function(e){if(moved>6){e.preventDefault();e.stopPropagation();}},true);
+    var cur=0,target=0,vel=0,dragging=false,startX=0,startCur=0,lastCur=0,moved=0,downT=0;
+    var px=0,py=0,tpx=0,tpy=0,idle=Math.floor(Math.random()*140),shown=-1;
+    function cw(){ return cards[0]?cards[0].offsetWidth:200; }
+    function unit(){ return cw()*0.62; }
+
+    function render(){
+      var W=cw(),gapNear=W*0.62,gapFar=W*0.42,depth=W*0.6,ang=52;
+      for(var i=0;i<n;i++){
+        var o=i-cur,a=Math.abs(o),s=o<0?-1:o>0?1:0;
+        var rot=-Math.max(-1,Math.min(1,o))*ang;
+        var tx=s*(Math.min(a,1)*gapNear+Math.max(a-1,0)*gapFar);
+        var tz=-Math.min(a,5)*depth+(a<1?(1-a)*depth*0.35:0);
+        var sc=Math.max(1-a*0.12,0.62);
+        var op=a>4.2?0:(a>2.2?1-(a-2.2)*0.42:1);
+        var c=cards[i];
+        c.style.transform="translate(-50%,-50%) translateX("+tx+"px) translateZ("+tz+"px) rotateY("+rot+"deg) scale("+sc+")";
+        c.style.opacity=op.toFixed(3);
+        c.style.zIndex=String(200-Math.round(a*10));
+        c.style.pointerEvents=op<0.15?"none":"auto";
+      }
+      if(!reduce) track.style.transform="rotateX("+(py*6)+"deg) rotateY("+(px*7)+"deg)";
+      var idx=Math.max(0,Math.min(n-1,Math.round(cur)));
+      for(var k=0;k<n;k++) cards[k].classList.toggle("is-active",k===idx);
+      if(idx!==shown){ shown=idx; updateInfo(items[idx]); }
+    }
+    function updateInfo(p){
+      if(!nameEl) return;
+      infoEl.classList.add("flip");
+      setTimeout(function(){
+        nameEl.textContent=p.name.replace(/^🅉\s*-\s*/,'');
+        priceEl.innerHTML=p.price?(p.price+' <small>Cr</small>'):'';
+        buyEl.href=prodUrl(p.id);
+        infoEl.classList.remove("flip");
+      },165);
+    }
+    function loop(){
+      if(!reduce){ px+=(tpx-px)*0.06; py+=(tpy-py)*0.06; }
+      if(!dragging){
+        if(Math.abs(vel)>0.0015){ cur+=vel; vel*=0.92; if(Math.abs(vel)<0.02){vel=0;target=Math.round(cur);} }
+        else { cur+=(target-cur)*0.14; if(Math.abs(target-cur)<0.001) cur=target; }
+        if(!reduce){ idle++; if(idle>260){ target=(Math.round(cur)+1)%n; idle=0; } }
+      }
+      if(cur<0){cur=0;vel=0;} if(cur>n-1){cur=n-1;vel=0;}
+      render(); requestAnimationFrame(loop);
+    }
+    render(); requestAnimationFrame(loop);
+
+    stageEl.addEventListener("pointerdown",function(e){
+      dragging=true;startX=e.clientX;startCur=cur;lastCur=cur;moved=0;downT=Date.now();vel=0;idle=0;
+      if(stageEl.setPointerCapture)stageEl.setPointerCapture(e.pointerId);
+    });
+    window.addEventListener("pointermove",function(e){
+      if(!reduce){ tpx=(e.clientX/innerWidth-.5)*2; tpy=(e.clientY/innerHeight-.5)*2; }
+      if(!dragging) return;
+      var dx=e.clientX-startX; moved=Math.max(moved,Math.abs(dx));
+      cur=startCur-dx/unit(); vel=cur-lastCur; lastCur=cur;
+    });
+    window.addEventListener("pointerup",function(e){
+      if(!dragging) return; dragging=false; idle=0;
+      if(moved<6 && Date.now()-downT<400){
+        var el=document.elementFromPoint(e.clientX,e.clientY);
+        var t=(el&&el.closest)?el.closest(".cf-card"):null;
+        if(t){ var i=parseInt(t.dataset.i,10);
+          if(i===Math.round(cur)) window.open(prodUrl(items[i].id),"_blank");
+          else { target=i; vel=0; }
+        }
+      } else { vel=Math.max(-0.6,Math.min(0.6,vel)); }
+    });
+    track.addEventListener("click",function(e){ e.preventDefault(); });
+    stageEl.addEventListener("wheel",function(e){
+      e.preventDefault(); idle=0; vel=0;
+      target=Math.max(0,Math.min(n-1,Math.round(cur)+(e.deltaY>0?1:-1)));
+    },{passive:false});
+    addEventListener("resize",render);
   }
   function bindTilt(){if(reduce)return;document.querySelectorAll(".tilt").forEach(function(card){
     if(card._tilt)return;card._tilt=1;

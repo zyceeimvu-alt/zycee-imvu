@@ -426,6 +426,16 @@
   ];
   function prodUrl(id){return "https://pt.imvu.com/shop/product.php?products_id="+id;}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  /* keep only one product per unique image (skins/heads share previews → avoid repeats) */
+  function dedupeByImg(list){
+    var seen={},out=[];
+    for(var i=0;i<list.length;i++){
+      var m=/images_([a-z0-9]+)/i.exec(list[i].img||"");
+      var key=m?m[1]:(list[i].img||list[i].id);
+      if(seen[key])continue; seen[key]=1; out.push(list[i]);
+    }
+    out.total=list.total; return out;
+  }
 
   /* ---------- fetch helpers ---------- */
   function fetchText(url,ms){
@@ -496,8 +506,8 @@
   makeCoverFlow({prefix:"best", items:BEST_SELLERS, rank:true});
 
   /* ---------- NEW DROPS carousel (auto-updates from the shop) ---------- */
-  proxied(SHOP_NEW).then(function(list){ if(list.total)setCount(list.total); makeCoverFlow({prefix:"new", items:list, rank:false}); })
-  .catch(function(){ makeCoverFlow({prefix:"new", items:FALLBACK_NEW, rank:false}); });
+  proxied(SHOP_NEW).then(function(list){ if(list.total)setCount(list.total); makeCoverFlow({prefix:"new", items:dedupeByImg(list), rank:false}); })
+  .catch(function(){ makeCoverFlow({prefix:"new", items:dedupeByImg(FALLBACK_NEW), rank:false}); });
 
   /* ---------- 3D Cover Flow engine (reusable) ---------- */
   function makeCoverFlow(cfg){
@@ -586,9 +596,14 @@
       } else { vel=Math.max(-0.6,Math.min(0.6,vel)); }
     });
     track.addEventListener("click",function(e){ e.preventDefault(); });
+    var wheelAcc=0;
     stageEl.addEventListener("wheel",function(e){
+      var dir=e.deltaY>0?1:-1;
+      // at the ends, let the wheel pass through so the page scrolls (no trapping)
+      if((dir>0 && target>=n-1) || (dir<0 && target<=0)){ wheelAcc=0; return; }
       e.preventDefault(); idle=0; vel=0;
-      target=Math.max(0,Math.min(n-1,Math.round(cur)+(e.deltaY>0?1:-1)));
+      wheelAcc+=e.deltaY;
+      if(Math.abs(wheelAcc)>=38){ target=Math.max(0,Math.min(n-1,target+(wheelAcc>0?1:-1))); wheelAcc=0; }
     },{passive:false});
     addEventListener("resize",render);
   }
